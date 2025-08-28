@@ -20,7 +20,7 @@ logging.basicConfig(
 # Configuration
 TARGET_URL = "https://www.abasteceai-futebol.com.br/"  # Change to your target page after login
 REFRESH_INTERVAL = os.environ.get("REFRESH_INTERVAL")  # Seconds between refreshes
-HEADLESS_MODE = False  # Set to False to see the browser
+HEADLESS_MODE = True  # Set to False to see the browser
 WHATSAPP_BASE_URL = os.environ.get("WHATSAPP_BASE_URL")
 WHATSAPP_API_KEY = os.environ.get("WHATSAPP_API_KEY")
 WHATSAPP_SESSION = os.environ.get("WHATSAPP_SESSION")

@@ -1,3 +1,7 @@
+# App exclusions
+*.png
+downloaded_files/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
