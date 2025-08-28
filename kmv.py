@@ -84,7 +84,7 @@ def main():
                             api_key=WHATSAPP_API_KEY,
                             session=WHATSAPP_SESSION,
                         )
-                        whatsapp_send_message(
+                        send_fail = whatsapp_send_message(
                             base_url=WHATSAPP_BASE_URL,
                             api_key=WHATSAPP_API_KEY,
                             session=WHATSAPP_SESSION,
@@ -92,10 +92,12 @@ def main():
                             content=team_match.screenshot_as_base64,
                             content_type="MessageMedia",
                         )
-                        team_match.screenshot('team_match.png')
+                        #team_match.screenshot('team_match.png')
                         break
-                    
+                
                 if found:
+                    for cell_fail in send_fail:
+                        logging.error(f"Failed to send message to {cell_fail}")                    
                     break
                 
                 # Wait for the next refresh
