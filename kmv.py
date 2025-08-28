@@ -79,11 +79,11 @@ def main():
                     if search_text in team_match.text:
                         logging.info(f"Match found: {team_match.text}")
                         found = True
-                        whatsapp_restart_session(
-                            base_url=WHATSAPP_BASE_URL,
-                            api_key=WHATSAPP_API_KEY,
-                            session=WHATSAPP_SESSION,
-                        )
+                        #whatsapp_restart_session(
+                        #    base_url=WHATSAPP_BASE_URL,
+                        #    api_key=WHATSAPP_API_KEY,
+                        #    session=WHATSAPP_SESSION,
+                        #)
                         send_fail = whatsapp_send_message(
                             base_url=WHATSAPP_BASE_URL,
                             api_key=WHATSAPP_API_KEY,
@@ -96,9 +96,13 @@ def main():
                         break
                 
                 if found:
+                    wa_ok = True
                     for cell_fail in send_fail:
-                        logging.error(f"Failed to send message to {cell_fail}")                    
-                    break
+                        logging.error(f"Failed to send message to {cell_fail}")
+                        wa_ok = False
+                    if wa_ok:
+                        logging.info("Message sent successfully to all contacts")                                            
+                        break
                 
                 # Wait for the next refresh
                 time.sleep(int(REFRESH_INTERVAL))

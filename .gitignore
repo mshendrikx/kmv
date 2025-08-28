@@ -1,6 +1,7 @@
 # App exclusions
 *.png
 downloaded_files/
+build.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
