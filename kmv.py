@@ -22,7 +22,7 @@ logging.basicConfig(
 
 # Configuration
 TARGET_URL = "https://www.abasteceai-futebol.com.br/"  # Change to your target page after login
-REFRESH_INTERVAL = os.environ.get("REFRESH_INTERVAL")  # Seconds between refreshes
+REFRESH_INTERVAL = int(os.environ.get("REFRESH_INTERVAL"))  # Seconds between refreshes
 WHATSAPP_BASE_URL = os.environ.get("WHATSAPP_BASE_URL")
 WHATSAPP_API_KEY = os.environ.get("WHATSAPP_API_KEY")
 WHATSAPP_SESSION = os.environ.get("WHATSAPP_SESSION")
@@ -101,12 +101,8 @@ def main():
             search_team = search[1]
             search_text = search[2]
             cell_phone = [search[3]]
-            #final_date_txt = search[3]
-            #final_date = datetime.strptime(final_date_txt, "%Y-%m-%d %H:%M:%S")
 
             teams_xpath = f'/html/body/app-root/div/div/app-home-container/app-view-home/div/div[2]/div/app-home-welcome/section/div/app-home-welcome-clubs'
-            #search_xpath = f'/html/body/app-root/div/app-header-container/app-view-header/div/div[2]/input'
-            #result_xpath = f'/html/body/app-root/div/app-header-container/app-view-header/div[1]/div[2]/app-modal-search'
 
             try:
 
@@ -118,9 +114,6 @@ def main():
                 logging.info("Press Ctrl+C to stop the script")
                 
                 try:
-                    #if final_date < datetime.now():
-                    #    logging.info("final_date is in the future.")
-                    #    continue
                     driver.wait_for_element(teams_xpath, timeout=10)
                     teams_div = driver.find_elements(".club.animated.fadeInUp.ng-star-inserted")
                     for item in teams_div:
@@ -184,7 +177,7 @@ def main():
         logging.info("Browser closed successfully")
 
         # Wait for the next refresh
-        time.sleep(int(REFRESH_INTERVAL))
+        time.sleep(REFRESH_INTERVAL)
         # Refresh the page
 
         logging.info("Page refreshed successfully")
