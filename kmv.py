@@ -28,6 +28,14 @@ CELL_PHONE_NUMBERS = os.environ.get("CELL_PHONE_NUMBERS").split(",")  # List of 
 
 def main():
     
+    whatsapp_restart_session(
+        base_url=WHATSAPP_BASE_URL,
+        api_key=WHATSAPP_API_KEY,
+        session=WHATSAPP_SESSION,
+    )
+    
+    time.sleep(5)  # Wait for WhatsApp session to stabilize
+    
     final_date_txt = os.environ.get("FINAL_DATE")  # The final date to stop the script
     final_date = datetime.strptime(final_date_txt, "%Y-%m-%d %H:%M:%S")
     search_team = os.environ.get("SEARCH_TEAM")  # The team to search for
@@ -79,11 +87,6 @@ def main():
                     if search_text in team_match.text:
                         logging.info(f"Match found: {team_match.text}")
                         found = True
-                        #whatsapp_restart_session(
-                        #    base_url=WHATSAPP_BASE_URL,
-                        #    api_key=WHATSAPP_API_KEY,
-                        #    session=WHATSAPP_SESSION,
-                        #)
                         send_fail = whatsapp_send_message(
                             base_url=WHATSAPP_BASE_URL,
                             api_key=WHATSAPP_API_KEY,
