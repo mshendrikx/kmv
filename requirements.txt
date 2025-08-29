@@ -1,3 +1,6 @@
 python-dotenv
 seleniumbase
 requests
+mysql-connector
+pymysql
+SQLAlchemy
