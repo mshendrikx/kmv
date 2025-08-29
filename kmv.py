@@ -141,6 +141,7 @@ def main():
                                 content=team_match.screenshot_as_base64,
                                 content_type="MessageMedia",
                             )
+                            time.sleep(5)  # Wait a bit after sending message
                             #team_match.screenshot('team_match.png')
                             break
                         
