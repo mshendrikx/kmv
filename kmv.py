@@ -178,8 +178,7 @@ def main():
                 logging.info("\nScript stopped by user")
 
             except Exception as e:
-                logging.error(f"Fatal error: {str(e)}")
-                
+                logging.error(f"Fatal error: {str(e)}")                
                 
         driver.quit()
         logging.info("Browser closed successfully")
