@@ -77,6 +77,12 @@ def main():
         incognito=False,  # Some sites don't work well in incognito
         agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     )
+
+    teams_xpath = f'/html/body/app-root/div/div/app-home-container/app-view-home/div/div[2]/div/app-home-welcome/section/div/app-home-welcome-clubs'
+    
+    logging.info(f"Starting page refresh every {REFRESH_INTERVAL} seconds")
+    logging.info(f"Target URL: {TARGET_URL}")
+    logging.info("Press Ctrl+C to stop the script")
     
     while 1 == 1:
         
@@ -94,16 +100,10 @@ def main():
             search_text = search[2]
             cell_phone = [search[3]]
 
-            teams_xpath = f'/html/body/app-root/div/div/app-home-container/app-view-home/div/div[2]/div/app-home-welcome/section/div/app-home-welcome-clubs'
-
             try:
 
                 # Navigate to target page after successful login
                 driver.get(TARGET_URL)       
-
-                logging.info(f"Starting page refresh every {REFRESH_INTERVAL} seconds")
-                logging.info(f"Target URL: {TARGET_URL}")
-                logging.info("Press Ctrl+C to stop the script")
                 
                 try:
                     driver.wait_for_element(teams_xpath, timeout=10)
@@ -164,6 +164,7 @@ def main():
                             
                             session.close()
                             
+
                 except Exception as e:
                     logging.error(f"Error: {str(e)}")
 
@@ -175,7 +176,6 @@ def main():
                 
         # Refresh the page
         logging.info("Page refreshed successfully")
-        driver.refresh()
 
         # Wait for the next refresh
         time.sleep(REFRESH_INTERVAL)
