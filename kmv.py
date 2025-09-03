@@ -72,14 +72,13 @@ def main():
 
     # Initialize the SeleniumBase Driver
     driver = Driver(
-        headless=True,
+        headless=False,
         uc_cdp=True,  # Undetected ChromeDriver mode
         incognito=False,  # Some sites don't work well in incognito
         agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     )
 
-    teams_xpath = f'/html/body/app-root/div/div/app-home-container/app-view-home/div/div[2]/div/app-home-welcome/section/div/app-home-welcome-clubs'
-    
+    search_xpath = '/html/body/app-root/div/app-header-container/app-view-header/div/div[2]/input'
     logging.info(f"Starting page refresh every {REFRESH_INTERVAL} seconds")
     logging.info(f"Target URL: {TARGET_URL}")
     logging.info("Press Ctrl+C to stop the script")
@@ -106,65 +105,39 @@ def main():
                 driver.get(TARGET_URL)       
                 
                 try:
-                    driver.wait_for_element(teams_xpath, timeout=10)
-                    teams_div = driver.find_elements(".club.animated.fadeInUp.ng-star-inserted")
+                    search_element = driver.wait_for_element(search_xpath, timeout=10)
+                    time.sleep(2)  # Wait for the element to be fully interactable
+                    search_element.send_keys(search_team)
+                    teams_div = driver.find_elements(".view-match")
                     for item in teams_div:
-                        if search_team in item.text:
-                            logging.info(f"Found team: {item.text}")
-                            team = item
-                            item.click()
-                            break
-                    if not team:
-                        logging.info(f"Team {search_team} not found.")
-                        continue
-                    
-                    driver.wait_for_element('.home-products', timeout=10)
-                    team_matches = driver.find_elements(".match-item.ng-star-inserted")
-                    found = False
-                    for team_match in team_matches:
-                        if search_text in team_match.text:
-                            logging.info(f"Match found: {team_match.text}")
-                            found = True
-                        
-                            #whatsapp_restart_session(
-                            #    base_url=WHATSAPP_BASE_URL,
-                            #    api_key=WHATSAPP_API_KEY,
-                            #    session=WHATSAPP_SESSION,
-                            #)    
-                            #time.sleep(10)  # Wait for WhatsApp session to stabilize
-    
+                        if search_text in item.text:
+                            logging.info(f"Found match: {item.text}")
                             send_fail = whatsapp_send_message(
                                 base_url=WHATSAPP_BASE_URL,
                                 api_key=WHATSAPP_API_KEY,
                                 session=WHATSAPP_SESSION,
                                 contacts=cell_phone,
-                                content=team_match.screenshot_as_base64,
+                                content=item.screenshot_as_base64,
                                 content_type="MessageMedia",
                             )
-                            time.sleep(5)  # Wait a bit after sending message
-                            #team_match.screenshot('team_match.png')
+                            time.sleep(5)
+                            
+                            if send_fail == []:
+                                logging.info("Message sent successfully to all contacts")
+                                session = SessionLocal()
+                                try:
+                                    search_to_delete = session.query(Search).filter(Search.id == search_id).first()
+                                    if search_to_delete:
+                                        session.delete(search_to_delete)
+                                        session.commit()
+                                        logging.info(f"Search ID {search_id} deleted from database")
+                                except Exception as e:
+                                    logging.error(f"Error deleting search ID {search_id}: {str(e)}")                                          
+                                
+                                session.close()
+                            
                             break
-                        
-                    if found:
-                        wa_ok = True
-                        for cell_fail in send_fail:
-                            logging.error(f"Failed to send message to {cell_fail}")
-                            wa_ok = False
-                        if wa_ok:
-                            logging.info("Message sent successfully to all contacts")
-                            session = SessionLocal()
-                            try:
-                                search_to_delete = session.query(Search).filter(Search.id == search_id).first()
-                                if search_to_delete:
-                                    session.delete(search_to_delete)
-                                    session.commit()
-                                    logging.info(f"Search ID {search_id} deleted from database")
-                            except Exception as e:
-                                logging.error(f"Error deleting search ID {search_id}: {str(e)}")                                          
-                            
-                            session.close()
-                            
-
+                    
                 except Exception as e:
                     logging.error(f"Error: {str(e)}")
 
