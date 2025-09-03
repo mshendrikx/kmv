@@ -132,7 +132,7 @@ def main():
                                 session=WHATSAPP_SESSION,
                             )
     
-                            time.sleep(5)  # Wait for WhatsApp session to stabilize
+                            time.sleep(10)  # Wait for WhatsApp session to stabilize
     
                             send_fail = whatsapp_send_message(
                                 base_url=WHATSAPP_BASE_URL,
@@ -167,7 +167,6 @@ def main():
                             
                 except Exception as e:
                     logging.error(f"Error: {str(e)}")
-                    driver.refresh()
 
             except KeyboardInterrupt:
                 logging.info("\nScript stopped by user")
