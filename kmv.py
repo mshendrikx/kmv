@@ -69,14 +69,14 @@ def get_searches_db():
     return searches
 
 def main():
-    
-    whatsapp_restart_session(
-        base_url=WHATSAPP_BASE_URL,
-        api_key=WHATSAPP_API_KEY,
-        session=WHATSAPP_SESSION,
+
+    # Initialize the SeleniumBase Driver
+    driver = Driver(
+        headless=True,
+        uc_cdp=True,  # Undetected ChromeDriver mode
+        incognito=False,  # Some sites don't work well in incognito
+        agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     )
-    
-    time.sleep(10)  # Wait for WhatsApp session to stabilize
     
     while 1 == 1:
         
@@ -86,15 +86,7 @@ def main():
             logging.info("No searches found. Waiting for new searches.")
             time.sleep(60)
             continue
-
-        # Initialize the SeleniumBase Driver
-        driver = Driver(
-            headless=True,
-            uc_cdp=True,  # Undetected ChromeDriver mode
-            incognito=False,  # Some sites don't work well in incognito
-            agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        )
-        
+       
         for search in searches:
             
             search_id = search[0]
@@ -133,6 +125,15 @@ def main():
                         if search_text in team_match.text:
                             logging.info(f"Match found: {team_match.text}")
                             found = True
+                        
+                            whatsapp_restart_session(
+                                base_url=WHATSAPP_BASE_URL,
+                                api_key=WHATSAPP_API_KEY,
+                                session=WHATSAPP_SESSION,
+                            )
+    
+                            time.sleep(5)  # Wait for WhatsApp session to stabilize
+    
                             send_fail = whatsapp_send_message(
                                 base_url=WHATSAPP_BASE_URL,
                                 api_key=WHATSAPP_API_KEY,
@@ -174,14 +175,12 @@ def main():
             except Exception as e:
                 logging.error(f"Fatal error: {str(e)}")                
                 
-        driver.quit()
-        logging.info("Browser closed successfully")
+        # Refresh the page
+        logging.info("Page refreshed successfully")
+        driver.refresh()
 
         # Wait for the next refresh
         time.sleep(REFRESH_INTERVAL)
-        # Refresh the page
-
-        logging.info("Page refreshed successfully")
             
 
 if __name__ == "__main__":
