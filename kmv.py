@@ -126,13 +126,12 @@ def main():
                             logging.info(f"Match found: {team_match.text}")
                             found = True
                         
-                            whatsapp_restart_session(
-                                base_url=WHATSAPP_BASE_URL,
-                                api_key=WHATSAPP_API_KEY,
-                                session=WHATSAPP_SESSION,
-                            )
-    
-                            time.sleep(10)  # Wait for WhatsApp session to stabilize
+                            #whatsapp_restart_session(
+                            #    base_url=WHATSAPP_BASE_URL,
+                            #    api_key=WHATSAPP_API_KEY,
+                            #    session=WHATSAPP_SESSION,
+                            #)    
+                            #time.sleep(10)  # Wait for WhatsApp session to stabilize
     
                             send_fail = whatsapp_send_message(
                                 base_url=WHATSAPP_BASE_URL,
