@@ -72,7 +72,7 @@ def main():
 
     # Initialize the SeleniumBase Driver
     driver = Driver(
-        headless=False,
+        headless=True,
         uc_cdp=True,  # Undetected ChromeDriver mode
         incognito=False,  # Some sites don't work well in incognito
         agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -119,6 +119,14 @@ def main():
                                 contacts=cell_phone,
                                 content=item.screenshot_as_base64,
                                 content_type="MessageMedia",
+                            )
+                            send_fail = whatsapp_send_message(
+                                base_url=WHATSAPP_BASE_URL,
+                                api_key=WHATSAPP_API_KEY,
+                                session=WHATSAPP_SESSION,
+                                contacts=cell_phone,
+                                content=TARGET_URL,
+                                content_type="string",
                             )
                             time.sleep(5)
                             
